@@ -47,12 +47,14 @@ class UsuarioController extends Controller
     }
 
     public function gerentes(){
-        $gerentes = User::with('regiao')->where('perfil','gerente')->paginate(10);
+        $usuario = auth()->user();
+        $gerentes = User::with('regiao')->where('empresa_id',$usuario->empresa_id)->where('perfil','gerente')->paginate(10);
         return $gerentes;
     }
 
     public function gerentes_select(){
-        $gerentes = User::with('regiao')->where('perfil','gerente')->get();
+        $usuario = auth()->user();
+        $gerentes = User::with('regiao')->where('empresa_id',$usuario->empresa_id)->where('perfil','gerente')->get();
         return $gerentes;
     }
 
@@ -62,13 +64,14 @@ class UsuarioController extends Controller
         if($usuario->perfil == 'gerente'){
             $supervisores = $usuario->supervisores_gerente()->with('regiao')->where('perfil','supervisor')->paginate(10);
         }else{
-            $supervisores = User::with('regiao')->where('perfil','supervisor')->paginate(10);
+            $supervisores = User::with('regiao')->where('empresa_id',$usuario->empresa_id)->where('perfil','supervisor')->paginate(10);
         }
         return $supervisores;
     }
 
     public function supervisores_select(){
-        $gerentes = User::with('regiao')->where('perfil','supervisor')->get();
+        $usuario = auth()->user();
+        $gerentes = User::with('regiao')->where('empresa_id',$usuario->empresa_id)->where('perfil','supervisor')->get();
         return $gerentes;
     }
 
@@ -80,18 +83,20 @@ class UsuarioController extends Controller
         }elseif($usuario->perfil == 'supervisor'){
             $cambistas = $usuario->cambistas_supervisor()->with('comissao','gerente')->where('perfil','cambista')->paginate(10);
         }else{
-            $cambistas = User::with('comissao','gerente')->where('perfil','cambista')->paginate(10);
+            $cambistas = User::with('comissao','gerente')->where('empresa_id',$usuario->empresa_id)->where('perfil','cambista')->paginate(10);
         }
         return $cambistas;
     }
 
     public function cambistas_select(){
-        $cambista = User::with('comissao','gerente')->where('perfil','cambista')->get();
+        $usuario = auth()->user();
+        $cambista = User::with('comissao','gerente')->where('empresa_id',$usuario->empresa_id)->where('perfil','cambista')->get();
         return $cambista;
     }
 
     public function selectCambistas(){
-        $cambista = User::where('perfil','cambista')->get();
+        $usuario = auth()->user();
+        $cambista = User::where('perfil','cambista')->where('empresa_id',$usuario->empresa_id)->get();
         return $cambista;
     }
 
